@@ -9,7 +9,7 @@ type Post = {
   body: string;
 };
 
-export const useFetchPosts = (postsForUserId: number | "all") => {
+export const useFetchPosts = (selectedUser: number | "all", limit: number) => {
   const [posts, setPosts] = useState<RequestState<Post[]>>({
     status: RequestStatus.Loading,
   });
@@ -24,7 +24,7 @@ export const useFetchPosts = (postsForUserId: number | "all") => {
           }
         );
         // Grab latest 20 posts and reverse to show latest post on top
-        const latestPosts = response.data.slice(-20).reverse();
+        const latestPosts = response.data.slice(-limit).reverse();
         setPosts({ status: RequestStatus.Success, data: latestPosts });
       } catch (err) {
         if (axios.isAxiosError(err)) {
@@ -40,12 +40,12 @@ export const useFetchPosts = (postsForUserId: number | "all") => {
 
     setPosts({ status: RequestStatus.Loading });
 
-    if (postsForUserId === "all") {
+    if (selectedUser === "all") {
       fetchPosts();
     } else {
-      fetchPosts(postsForUserId);
+      fetchPosts(selectedUser);
     }
-  }, [postsForUserId]);
+  }, [selectedUser, limit]);
 
   return posts;
 };
