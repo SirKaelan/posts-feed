@@ -1,13 +1,9 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { RequestStatus } from "./types";
+import { useFetchPosts } from "./components/hooks/useFetchPosts";
 
-enum RequestStatus {
-  Loading = "loading",
-  Success = "success",
-  Error = "error",
-}
-
-type Post = {
+export type Post = {
   userId: number;
   id: number;
   title: string;
@@ -38,19 +34,22 @@ type User = {
   };
 };
 
+export type ErrorStatus = {
+  status: RequestStatus.Error;
+  errorMsg: string;
+};
+
 type RequestState<T> =
   | { status: RequestStatus.Loading }
   | { status: RequestStatus.Success; data: T }
-  | { status: RequestStatus.Error; errorMsg: string };
+  | ErrorStatus;
 
 function App() {
-  const [posts, setPosts] = useState<RequestState<Post[]>>({
-    status: RequestStatus.Loading,
-  });
   const [users, setUsers] = useState<RequestState<User[]>>({
     status: RequestStatus.Loading,
   });
-  const [selectedUser, setSelectedUser] = useState<number | "all">("all");
+  const [postsForUserId, setSelectedUser] = useState<number | "all">("all");
+  const posts = useFetchPosts(postsForUserId);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -74,38 +73,6 @@ function App() {
     fetchUsers();
   }, []);
 
-  useEffect(() => {
-    const fetchPosts = async (userId?: number) => {
-      try {
-        const response = await axios.get<Post[]>(
-          "https://jsonplaceholder.typicode.com/posts",
-          {
-            params: userId ? { userId } : {},
-          }
-        );
-        // Grab latest 20 posts and reverse to show latest post on top
-        const latestPosts = response.data.slice(-20).reverse();
-        setPosts({ status: RequestStatus.Success, data: latestPosts });
-      } catch (err) {
-        if (axios.isAxiosError(err)) {
-          setPosts({ status: RequestStatus.Error, errorMsg: err.message });
-        } else {
-          setPosts({
-            status: RequestStatus.Error,
-            errorMsg: (err as Error).message,
-          });
-        }
-      }
-    };
-
-    setPosts({ status: RequestStatus.Loading });
-    if (selectedUser === "all") {
-      fetchPosts();
-    } else {
-      fetchPosts(selectedUser);
-    }
-  }, [selectedUser]);
-
   const handleUserChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const userId = e.target.value === "all" ? "all" : Number(e.target.value);
     setSelectedUser(userId);
@@ -118,7 +85,7 @@ function App() {
         <select
           className="border border-black"
           id="users"
-          value={selectedUser}
+          value={postsForUserId}
           onChange={handleUserChange}
         >
           <option value="all">All</option>
