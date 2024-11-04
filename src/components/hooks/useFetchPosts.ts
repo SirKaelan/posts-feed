@@ -1,11 +1,6 @@
 import { useState, useEffect } from "react";
-import { RequestStatus } from "../../types";
+import { RequestStatus, RequestState } from "../../types";
 import axios from "axios";
-
-type RequestState<T> =
-  | { status: RequestStatus.Loading }
-  | { status: RequestStatus.Success; data: T }
-  | { status: RequestStatus.Error; errorMsg: string };
 
 type Post = {
   userId: number;

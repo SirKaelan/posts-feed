@@ -1,77 +1,12 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useState } from "react";
 import { RequestStatus } from "./types";
 import { useFetchPosts } from "./components/hooks/useFetchPosts";
-
-export type Post = {
-  userId: number;
-  id: number;
-  title: string;
-  body: string;
-};
-
-type User = {
-  id: number;
-  name: string;
-  username: string;
-  email: string;
-  address: {
-    street: string;
-    suite: string;
-    city: string;
-    zipcode: string;
-    geo: {
-      lat: string;
-      lng: string;
-    };
-  };
-  phone: string;
-  website: string;
-  company: {
-    name: string;
-    catchPhrase: string;
-    bs: string;
-  };
-};
-
-export type ErrorStatus = {
-  status: RequestStatus.Error;
-  errorMsg: string;
-};
-
-type RequestState<T> =
-  | { status: RequestStatus.Loading }
-  | { status: RequestStatus.Success; data: T }
-  | ErrorStatus;
+import { useFetchUsers } from "./components/hooks/useFetchUsers";
 
 function App() {
-  const [users, setUsers] = useState<RequestState<User[]>>({
-    status: RequestStatus.Loading,
-  });
   const [postsForUserId, setSelectedUser] = useState<number | "all">("all");
+  const users = useFetchUsers();
   const posts = useFetchPosts(postsForUserId);
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await axios.get<User[]>(
-          "https://jsonplaceholder.typicode.com/users"
-        );
-        setUsers({ status: RequestStatus.Success, data: response.data });
-      } catch (err) {
-        if (axios.isAxiosError(err)) {
-          setUsers({ status: RequestStatus.Error, errorMsg: err.message });
-        } else {
-          setUsers({
-            status: RequestStatus.Error,
-            errorMsg: (err as Error).message,
-          });
-        }
-      }
-    };
-
-    fetchUsers();
-  }, []);
 
   const handleUserChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const userId = e.target.value === "all" ? "all" : Number(e.target.value);
