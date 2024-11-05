@@ -27,9 +27,9 @@ export const AddPost = ({
     <div>
       <button
         onClick={handleNewPostClick}
-        className="border border-black py-1 px-2 rounded hover:bg-blue-600 hover:text-white transition"
+        className="border border-gray-400 py-1 px-2 rounded hover:bg-blue-500 hover:text-white transition"
       >
-        Add New Post +
+        Add New Post
       </button>
 
       {showForm && (

@@ -12,10 +12,10 @@ export const SelectUser = ({
   users,
 }: SelectUserProps) => {
   return (
-    <div className="flex gap-2">
+    <div className="flex flex-col items-center gap-2 sm:flex-row">
       <label htmlFor="users">Get posts for:</label>
       <select
-        className="border border-black"
+        className="border border-gray-400 rounded"
         id="users"
         value={selectedUser}
         onChange={handleChange}

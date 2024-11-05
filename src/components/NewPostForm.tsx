@@ -85,19 +85,21 @@ export const NewPostForm = ({
   return (
     <div
       onClick={handleCloseClick}
-      className="absolute top-0 bottom-0 left-0 right-0 bg-black bg-opacity-40 flex justify-center items-center"
+      className="absolute top-0 bottom-0 left-0 right-0 bg-black bg-opacity-40 flex justify-center items-center z-10"
     >
       <div
         onClick={handleFormClick}
-        className="bg-white p-6 rounded flex flex-col gap-4 items-center"
+        className="bg-white py-16 px-20 rounded-lg flex flex-col gap-14 items-center"
       >
-        <h1 className="font-bold">Add New Post</h1>
-        <form onSubmit={handleFormSubmit} className="flex flex-col gap-4">
+        <h1 className="font-bold text-xl text-gray-800">ADD NEW POST</h1>
+        <form onSubmit={handleFormSubmit} className="flex flex-col gap-5">
           <div className="flex flex-col">
             {formErrors.title && (
-              <p className="text-red-600 mb-2">{formErrors.title}</p>
+              <p className="text-red-600 mb-2 text-sm">{formErrors.title}</p>
             )}
-            <label htmlFor="title-input">Title:</label>
+            <label htmlFor="title-input" className="text-sm text-gray-800">
+              Title
+            </label>
             <input
               id="title-input"
               name="title"
@@ -105,26 +107,31 @@ export const NewPostForm = ({
               value={formValues.title}
               onChange={handleInputChange}
               autoFocus
-              className="border border-black rounded"
+              className="border border-gray-500 rounded px-4 py-2"
             />
           </div>
 
           <div className="flex flex-col">
             {formErrors.body && (
-              <p className="text-red-600 mb-2">{formErrors.body}</p>
+              <p className="text-red-600 mb-2 text-sm">{formErrors.body}</p>
             )}
-            <label htmlFor="body-input">Body:</label>
+            <label htmlFor="body-input" className="text-sm text-gray-800">
+              Text
+            </label>
             <input
               id="body-input"
               name="body"
               type="text"
               value={formValues.body}
               onChange={handleInputChange}
-              className="border border-black rounded"
+              className="border border-gray-500 rounded px-4 py-2"
             />
           </div>
 
-          <button type="submit" className="border border-black rounded">
+          <button
+            type="submit"
+            className="mt-4 py-1 px-2 text-gray-800 border border-gray-500 rounded transition hover:bg-blue-500 hover:text-white"
+          >
             Submit
           </button>
         </form>

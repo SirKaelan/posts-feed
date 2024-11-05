@@ -21,8 +21,8 @@ function App() {
   };
 
   return (
-    <div className="p-20 flex flex-col gap-4">
-      <div className="flex justify-between items-center">
+    <div className="p-10 flex flex-col gap-10 md:p-20">
+      <div className="flex flex-col-reverse gap-6 justify-between items-center md:flex-row">
         <SelectUser
           selectedUser={selectedUser}
           users={users}
@@ -36,7 +36,12 @@ function App() {
           />
         )}
       </div>
-      <PostList posts={posts} currentUser={currentUser} setPosts={setPosts} />
+      <PostList
+        posts={posts}
+        users={users}
+        currentUser={currentUser}
+        setPosts={setPosts}
+      />
     </div>
   );
 }
