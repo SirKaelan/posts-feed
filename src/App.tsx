@@ -3,6 +3,7 @@ import { useFetchUsers } from "./components/hooks/useFetchUsers";
 import { PostList } from "./components/PostList";
 import { SelectUser } from "./components/SelectUser";
 import { SelectUserAccount } from "./components/SelectUserAccount";
+import { AddPost } from "./components/AddPost";
 import { SelectChangeEvent } from "./types";
 
 function App() {
@@ -26,11 +27,14 @@ function App() {
         users={users}
         handleChange={handleAccountChange}
       />
-      <SelectUser
-        selectedUser={selectedUser}
-        users={users}
-        handleChange={handleUserChange}
-      />
+      <div className="flex justify-between items-center">
+        <SelectUser
+          selectedUser={selectedUser}
+          users={users}
+          handleChange={handleUserChange}
+        />
+        <AddPost />
+      </div>
       <PostList selectedUser={selectedUser} limit={20} />
     </div>
   );
