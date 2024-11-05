@@ -5,7 +5,11 @@ export const AddPost = () => {
   const [showForm, setShowForm] = useState<boolean>(false);
 
   const handleNewPostClick = () => {
-    setShowForm((prevState) => !prevState);
+    setShowForm(true);
+  };
+
+  const handleFormCloseClick = () => {
+    setShowForm(false);
   };
 
   return (
@@ -17,7 +21,7 @@ export const AddPost = () => {
         Add New Post +
       </button>
 
-      {showForm && <NewPostForm />}
+      {showForm && <NewPostForm handleCloseClick={handleFormCloseClick} />}
     </div>
   );
 };
