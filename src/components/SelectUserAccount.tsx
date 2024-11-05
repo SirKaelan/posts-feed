@@ -1,26 +1,25 @@
 import { RequestState, RequestStatus, User } from "../types";
 
-type SelectUserProps = {
+type SelectUserAccountProps = {
   handleChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  selectedUser: number | "all";
+  loggedUser: number;
   users: RequestState<User[]>;
 };
 
-export const SelectUser = ({
+export const SelectUserAccount = ({
   handleChange,
-  selectedUser,
+  loggedUser,
   users,
-}: SelectUserProps) => {
+}: SelectUserAccountProps) => {
   return (
-    <div className="flex gap-2">
-      <label htmlFor="users">Get posts for:</label>
+    <div className="flex gap-2 self-end">
+      <label htmlFor="logged-user">Logged in as:</label>
       <select
-        className="border border-black"
-        id="users"
-        value={selectedUser}
+        id="logged-user"
+        value={loggedUser}
         onChange={handleChange}
+        className="border border-black"
       >
-        <option value="all">All</option>
         {users.status === RequestStatus.Success &&
           users.data.map((user) => (
             <option key={user.id} value={user.id}>
