@@ -4,7 +4,10 @@ export enum RequestStatus {
   Error = "error",
 }
 
+export type ErrorStatus = { status: RequestStatus.Error; errorMsg: string };
+export type SuccessStatus<T> = { status: RequestStatus.Success; data: T };
+
 export type RequestState<T> =
   | { status: RequestStatus.Loading }
-  | { status: RequestStatus.Success; data: T }
-  | { status: RequestStatus.Error; errorMsg: string };
+  | SuccessStatus<T>
+  | ErrorStatus;

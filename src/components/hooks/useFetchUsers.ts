@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { RequestState, RequestStatus } from "../../types";
+import {
+  RequestState,
+  RequestStatus,
+  ErrorStatus,
+  SuccessStatus,
+} from "../../types";
 import axios from "axios";
 
 export const useFetchUsers = () => {
@@ -8,25 +13,16 @@ export const useFetchUsers = () => {
   });
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await axios.get<User[]>(
-          "https://jsonplaceholder.typicode.com/users"
-        );
-        setUsers({ status: RequestStatus.Success, data: response.data });
-      } catch (err) {
-        if (axios.isAxiosError(err)) {
-          setUsers({ status: RequestStatus.Error, errorMsg: err.message });
-        } else {
-          setUsers({
-            status: RequestStatus.Error,
-            errorMsg: (err as Error).message,
-          });
-        }
-      }
-    };
+    setUsers({ status: RequestStatus.Loading });
 
-    fetchUsers();
+    const usersRequest = fetchUsers();
+    usersRequest.then((users) => {
+      if (users.status === RequestStatus.Success) {
+        setUsers(users);
+      } else {
+        setUsers(users);
+      }
+    });
   }, []);
 
   return users;
@@ -54,4 +50,28 @@ type User = {
     catchPhrase: string;
     bs: string;
   };
+};
+
+const fetchUsers = async (): Promise<SuccessStatus<User[]> | ErrorStatus> => {
+  try {
+    const { data } = await axios.get<User[]>(
+      "https://jsonplaceholder.typicode.com/users"
+    );
+    return {
+      status: RequestStatus.Success,
+      data,
+    };
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      return {
+        status: RequestStatus.Error,
+        errorMsg: err.message,
+      };
+    } else {
+      return {
+        status: RequestStatus.Error,
+        errorMsg: (err as Error).message,
+      };
+    }
+  }
 };

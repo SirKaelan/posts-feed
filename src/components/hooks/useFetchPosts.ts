@@ -1,6 +1,31 @@
 import { useState, useEffect } from "react";
-import { RequestStatus, RequestState } from "../../types";
+import {
+  RequestStatus,
+  RequestState,
+  ErrorStatus,
+  SuccessStatus,
+} from "../../types";
 import axios from "axios";
+
+export const useFetchPosts = (selectedUser: number | "all", limit: number) => {
+  const [posts, setPosts] = useState<RequestState<Post[]>>({
+    status: RequestStatus.Loading,
+  });
+
+  useEffect(() => {
+    setPosts({ status: RequestStatus.Loading });
+
+    if (selectedUser === "all") {
+      const postsRequest = fetchPosts();
+      addPostsToState(postsRequest, setPosts, limit);
+    } else {
+      const postsRequest = fetchPosts(selectedUser);
+      addPostsToState(postsRequest, setPosts, limit);
+    }
+  }, [selectedUser, limit]);
+
+  return posts;
+};
 
 type Post = {
   userId: number;
@@ -9,43 +34,45 @@ type Post = {
   body: string;
 };
 
-export const useFetchPosts = (selectedUser: number | "all", limit: number) => {
-  const [posts, setPosts] = useState<RequestState<Post[]>>({
-    status: RequestStatus.Loading,
-  });
-
-  useEffect(() => {
-    const fetchPosts = async (userId?: number) => {
-      try {
-        const response = await axios.get<Post[]>(
-          "https://jsonplaceholder.typicode.com/posts",
-          {
-            params: userId ? { userId } : {},
-          }
-        );
-        // Grab latest 20 posts and reverse to show latest post on top
-        const latestPosts = response.data.slice(-limit).reverse();
-        setPosts({ status: RequestStatus.Success, data: latestPosts });
-      } catch (err) {
-        if (axios.isAxiosError(err)) {
-          setPosts({ status: RequestStatus.Error, errorMsg: err.message });
-        } else {
-          setPosts({
-            status: RequestStatus.Error,
-            errorMsg: (err as Error).message,
-          });
-        }
+// Fetching function
+const fetchPosts = async (
+  userId?: number
+): Promise<SuccessStatus<Post[]> | ErrorStatus> => {
+  try {
+    const { data } = await axios.get<Post[]>(
+      "https://jsonplaceholder.typicode.com/posts",
+      {
+        params: userId ? { userId } : {},
       }
+    );
+
+    return {
+      status: RequestStatus.Success,
+      data,
     };
-
-    setPosts({ status: RequestStatus.Loading });
-
-    if (selectedUser === "all") {
-      fetchPosts();
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      return { status: RequestStatus.Error, errorMsg: err.message };
     } else {
-      fetchPosts(selectedUser);
+      return {
+        status: RequestStatus.Error,
+        errorMsg: (err as Error).message,
+      };
     }
-  }, [selectedUser, limit]);
+  }
+};
 
-  return posts;
+const addPostsToState = (
+  request: Promise<ErrorStatus | SuccessStatus<Post[]>>,
+  setState: React.Dispatch<React.SetStateAction<RequestState<Post[]>>>,
+  limit: number
+) => {
+  request.then((posts) => {
+    if (posts.status === RequestStatus.Success) {
+      posts.data = posts.data.slice(-limit).reverse();
+      setState(posts);
+    } else {
+      setState(posts);
+    }
+  });
 };
