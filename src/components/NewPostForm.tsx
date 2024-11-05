@@ -1,16 +1,23 @@
 import { useState } from "react";
 import axios from "axios";
 import { Post, RequestState, RequestStatus, User } from "../types";
-import { getFromLocalStorage, saveToLocalStorage } from "../utils/localStorage";
+import {
+  getFromLocalStorage,
+  saveToLocalStorage,
+  getAllLocalStorageValues,
+} from "../utils/localStorage";
+import { config } from "../config";
 
 type NewPostFormProps = {
   currentUser: User;
+  selectedUser: number | "all";
   setPosts: React.Dispatch<React.SetStateAction<RequestState<Post[]>>>;
   handleCloseClick: () => void;
 };
 
 export const NewPostForm = ({
   currentUser,
+  selectedUser,
   setPosts,
   handleCloseClick,
 }: NewPostFormProps) => {
@@ -65,7 +72,9 @@ export const NewPostForm = ({
         if (newPost) {
           const newPostId = savePostToLocalStorage(newPost, currentUser.id);
 
-          addPostToPostsState(setPosts, newPost, newPostId);
+          if (currentUser.id === selectedUser || selectedUser === "all") {
+            addPostToPostsState(setPosts, newPost, newPostId);
+          }
         } else {
           console.error("Nothing was received from API.");
         }
@@ -95,6 +104,7 @@ export const NewPostForm = ({
               type="text"
               value={formValues.title}
               onChange={handleInputChange}
+              autoFocus
               className="border border-black rounded"
             />
           </div>
@@ -183,16 +193,39 @@ const savePostToLocalStorage = (
   const currentUserPosts = getFromLocalStorage<Post[]>(lsKey);
 
   if (currentUserPosts) {
+    // Get all local storage values
+    const allPosts = getAllLocalStorageValues<Post>().sort(
+      (a, b) => b.id - a.id
+    );
+
     // if custom posts are stored in LS then modify and add again
-    const customPost: Post = {
+    const editedPost: Post = {
       ...newPost,
-      id: currentUserPosts[0].id + 1,
+      id: allPosts[0].id + 1,
     };
-    saveToLocalStorage<Post[]>(lsKey, [customPost, ...currentUserPosts]);
-    return customPost.id;
+    saveToLocalStorage<Post[]>(lsKey, [editedPost, ...currentUserPosts]);
+    return editedPost.id;
   } else {
-    saveToLocalStorage<Post[]>(lsKey, [newPost]);
-    return newPost.id;
+    // might be empty
+    const allPosts = getAllLocalStorageValues<Post>().sort(
+      (a, b) => b.id - a.id
+    );
+
+    // if there are no other users with posts
+    if (allPosts.length === 0) {
+      // save new post as is
+      saveToLocalStorage<Post[]>(lsKey, [newPost]);
+      return newPost.id;
+    } else {
+      // if there are other users with posts
+      const editedPost: Post = {
+        ...newPost,
+        // check the latest custom post's id and add + 1 to it
+        id: allPosts[0].id + 1,
+      };
+      saveToLocalStorage<Post[]>(lsKey, [editedPost]);
+      return editedPost.id;
+    }
   }
 };
 
@@ -210,7 +243,10 @@ const addPostToPostsState = (
 
       return {
         status: RequestStatus.Success,
-        data: [newPostFixed, ...prevState.data],
+        data: [newPostFixed, ...prevState.data].slice(
+          0,
+          config.postsDisplayLimit
+        ),
       };
     } else {
       return prevState;

@@ -4,10 +4,15 @@ import { Post, RequestState, User } from "../types";
 
 type AddPostProps = {
   currentUser: User;
+  selectedUser: number | "all";
   setPosts: React.Dispatch<React.SetStateAction<RequestState<Post[]>>>;
 };
 
-export const AddPost = ({ currentUser, setPosts }: AddPostProps) => {
+export const AddPost = ({
+  currentUser,
+  selectedUser,
+  setPosts,
+}: AddPostProps) => {
   const [showForm, setShowForm] = useState<boolean>(false);
 
   const handleNewPostClick = () => {
@@ -30,6 +35,7 @@ export const AddPost = ({ currentUser, setPosts }: AddPostProps) => {
       {showForm && (
         <NewPostForm
           currentUser={currentUser}
+          selectedUser={selectedUser}
           handleCloseClick={handleFormCloseClick}
           setPosts={setPosts}
         />

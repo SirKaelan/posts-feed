@@ -5,10 +5,16 @@ import {
   ErrorStatus,
   SuccessStatus,
   Post,
+  User,
 } from "../../types";
 import axios from "axios";
+import { getAllLocalStorageValues } from "../../utils/localStorage";
+import { config } from "../../config";
 
-export const useFetchPosts = (selectedUser: number | "all", limit: number) => {
+export const useFetchPosts = (
+  selectedUser: number | "all",
+  currentUser: User | null
+) => {
   const [posts, setPosts] = useState<RequestState<Post[]>>({
     status: RequestStatus.Loading,
   });
@@ -17,13 +23,36 @@ export const useFetchPosts = (selectedUser: number | "all", limit: number) => {
     setPosts({ status: RequestStatus.Loading });
 
     if (selectedUser === "all") {
+      // Grab API and local storage posts
       const postsRequest = fetchPosts();
-      addPostsToState(postsRequest, setPosts, limit);
+      const LSPosts = getAllLocalStorageValues<Post>().sort(
+        (a, b) => a.id - b.id
+      );
+      // Add them to posts state
+      addPostsToState(
+        postsRequest,
+        setPosts,
+        config.postsDisplayLimit,
+        LSPosts
+      );
     } else {
+      // Same logic, but taking into account the filter
       const postsRequest = fetchPosts(selectedUser);
-      addPostsToState(postsRequest, setPosts, limit);
+      // Grab local storage posts only if you're looking at your own posts
+      const LSPosts =
+        selectedUser === currentUser?.id
+          ? getAllLocalStorageValues<Post>()
+              .filter((post) => post.userId === currentUser?.id)
+              .sort((a, b) => a.id - b.id)
+          : [];
+      addPostsToState(
+        postsRequest,
+        setPosts,
+        config.postsDisplayLimit,
+        LSPosts
+      );
     }
-  }, [selectedUser, limit]);
+  }, [selectedUser, currentUser]);
 
   return { posts, setPosts };
 };
@@ -59,11 +88,15 @@ const fetchPosts = async (
 const addPostsToState = (
   request: Promise<ErrorStatus | SuccessStatus<Post[]>>,
   setState: React.Dispatch<React.SetStateAction<RequestState<Post[]>>>,
-  limit: number
+  limit: number,
+  lsPosts: Post[]
 ) => {
   request.then((posts) => {
     if (posts.status === RequestStatus.Success) {
-      posts.data = posts.data.slice(-limit).reverse();
+      posts.data = [...posts.data, ...lsPosts]
+        .slice(-limit)
+        .sort((a, b) => b.id - a.id);
+      console.log("Posts:", posts.data);
       setState(posts);
     } else {
       setState(posts);
