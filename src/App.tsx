@@ -33,7 +33,7 @@ function App() {
           users={users}
           handleChange={handleUserChange}
         />
-        <AddPost />
+        <AddPost loggedUser={loggedUser} />
       </div>
       <PostList selectedUser={selectedUser} limit={20} />
     </div>

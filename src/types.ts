@@ -36,5 +36,12 @@ export type User = {
   };
 };
 
+export type Post = {
+  userId: number;
+  id: number;
+  title: string;
+  body: string;
+};
+
 // Event types
 export type SelectChangeEvent = React.ChangeEvent<HTMLSelectElement>;

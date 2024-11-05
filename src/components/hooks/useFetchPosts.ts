@@ -4,6 +4,7 @@ import {
   RequestState,
   ErrorStatus,
   SuccessStatus,
+  Post,
 } from "../../types";
 import axios from "axios";
 
@@ -25,13 +26,6 @@ export const useFetchPosts = (selectedUser: number | "all", limit: number) => {
   }, [selectedUser, limit]);
 
   return posts;
-};
-
-type Post = {
-  userId: number;
-  id: number;
-  title: string;
-  body: string;
 };
 
 // Fetching function

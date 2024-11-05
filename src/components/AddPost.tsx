@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { NewPostForm } from "./NewPostForm";
 
-export const AddPost = () => {
+type AddPostProps = {
+  loggedUser: number;
+};
+
+export const AddPost = ({ loggedUser }: AddPostProps) => {
   const [showForm, setShowForm] = useState<boolean>(false);
 
   const handleNewPostClick = () => {
@@ -21,7 +25,12 @@ export const AddPost = () => {
         Add New Post +
       </button>
 
-      {showForm && <NewPostForm handleCloseClick={handleFormCloseClick} />}
+      {showForm && (
+        <NewPostForm
+          handleCloseClick={handleFormCloseClick}
+          loggedUser={loggedUser}
+        />
+      )}
     </div>
   );
 };

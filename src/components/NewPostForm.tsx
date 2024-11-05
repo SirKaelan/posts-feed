@@ -1,10 +1,16 @@
 import { useState } from "react";
+import axios from "axios";
+import { Post } from "../types";
 
 type NewPostFormProps = {
   handleCloseClick: () => void;
+  loggedUser: number;
 };
 
-export const NewPostForm = ({ handleCloseClick }: NewPostFormProps) => {
+export const NewPostForm = ({
+  handleCloseClick,
+  loggedUser,
+}: NewPostFormProps) => {
   const [formValues, setFormValues] = useState<FormValues>({
     title: "",
     body: "",
@@ -43,7 +49,21 @@ export const NewPostForm = ({ handleCloseClick }: NewPostFormProps) => {
     setFormErrors(errors);
 
     if (Object.values(errors).every((value) => value.length === 0)) {
-      console.log("Form submitted!", formValues);
+      const newPost: NewPost = {
+        userId: loggedUser,
+        title: formValues.title,
+        body: formValues.body,
+      };
+
+      const response = sendNewPostToAPI(newPost);
+      response.then((newPost) => {
+        handleCloseClick();
+        if (newPost) {
+          console.log("New post:", newPost);
+        } else {
+          console.error("Nothing was received from API.");
+        }
+      });
     }
   };
 
@@ -107,6 +127,12 @@ type FormErrors = {
   body: string;
 };
 
+type NewPost = {
+  userId: number;
+  title: string;
+  body: string;
+};
+
 // Form field value validators
 type Validator = (value: string) => string;
 
@@ -127,4 +153,17 @@ type ValidatorsList = {
 const validators: ValidatorsList = {
   title: validateTitle,
   body: validateBody,
+};
+
+const sendNewPostToAPI = async (post: NewPost) => {
+  try {
+    const { data } = await axios.post<Post>(
+      "https://jsonplaceholder.typicode.com/posts",
+      post
+    );
+
+    return data;
+  } catch (err) {
+    console.error(err);
+  }
 };
