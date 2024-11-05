@@ -1,18 +1,18 @@
 import { useState } from "react";
 import axios from "axios";
-import { Post, RequestState, RequestStatus } from "../types";
+import { Post, RequestState, RequestStatus, User } from "../types";
 import { getFromLocalStorage, saveToLocalStorage } from "../utils/localStorage";
 
 type NewPostFormProps = {
-  handleCloseClick: () => void;
-  loggedUser: number;
+  currentUser: User;
   setPosts: React.Dispatch<React.SetStateAction<RequestState<Post[]>>>;
+  handleCloseClick: () => void;
 };
 
 export const NewPostForm = ({
-  handleCloseClick,
-  loggedUser,
+  currentUser,
   setPosts,
+  handleCloseClick,
 }: NewPostFormProps) => {
   const [formValues, setFormValues] = useState<FormValues>({
     title: "",
@@ -44,16 +44,17 @@ export const NewPostForm = ({
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    // Check for errors
     const errors: FormErrors = {
       title: validators["title"](formValues.title),
       body: validators["body"](formValues.body),
     };
-
     setFormErrors(errors);
 
+    // Send post request only if there are not errors
     if (Object.values(errors).every((value) => value.length === 0)) {
       const newPost: NewPost = {
-        userId: loggedUser,
+        userId: currentUser.id,
         title: formValues.title,
         body: formValues.body,
       };
@@ -62,7 +63,7 @@ export const NewPostForm = ({
       response.then((newPost) => {
         handleCloseClick();
         if (newPost) {
-          const newPostId = savePostToLocalStorage(newPost);
+          const newPostId = savePostToLocalStorage(newPost, currentUser.id);
 
           addPostToPostsState(setPosts, newPost, newPostId);
         } else {
@@ -138,14 +139,6 @@ type NewPost = {
   body: string;
 };
 
-type lsPost = {
-  type: "custom";
-  userId: number;
-  id: number;
-  title: string;
-  body: string;
-};
-
 // Form field value validators
 type Validator = (value: string) => string;
 
@@ -181,30 +174,25 @@ const sendNewPostToAPI = async (post: NewPost) => {
   }
 };
 
-const savePostToLocalStorage = (newPost: Post): number => {
-  const lsKey = "customPosts";
+const savePostToLocalStorage = (
+  newPost: Post,
+  currentUserId: number
+): number => {
+  const lsKey = currentUserId.toString();
   // Grab custom posts from LS
-  const customPosts = getFromLocalStorage<lsPost[]>(lsKey);
+  const currentUserPosts = getFromLocalStorage<Post[]>(lsKey);
 
-  if (customPosts) {
+  if (currentUserPosts) {
     // if custom posts are stored in LS then modify and add again
-    const customPost: lsPost = {
-      type: "custom",
-      id: customPosts[0].id + 1,
-      userId: newPost.userId,
-      title: newPost.title,
-      body: newPost.body,
+    const customPost: Post = {
+      ...newPost,
+      id: currentUserPosts[0].id + 1,
     };
-    saveToLocalStorage<lsPost[]>(lsKey, [customPost, ...customPosts]);
+    saveToLocalStorage<Post[]>(lsKey, [customPost, ...currentUserPosts]);
     return customPost.id;
   } else {
-    // make a new array and add to LS
-    const customPost: lsPost = {
-      type: "custom",
-      ...newPost,
-    };
-    saveToLocalStorage<lsPost[]>(lsKey, [customPost]);
-    return customPost.id;
+    saveToLocalStorage<Post[]>(lsKey, [newPost]);
+    return newPost.id;
   }
 };
 
@@ -215,7 +203,6 @@ const addPostToPostsState = (
 ) => {
   setPosts((prevState) => {
     if (prevState.status === RequestStatus.Success) {
-      // TODO: Need to make this a custom one and make posts array support both types
       const newPostFixed: Post = {
         ...newPost,
         id: newPostId,

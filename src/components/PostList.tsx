@@ -10,14 +10,18 @@ export const PostList = ({ posts }: PostListProps) => {
 
   return (
     <div className="flex flex-col gap-4 items-start">
-      {posts.data.map((post) => (
-        <div key={post.id} className="p-4 border border-black">
-          <p>User id: {post.userId}</p>
-          <p>Post id: {post.id}</p>
-          <p>Title: {post.title}</p>
-          <p>Body: {post.body}</p>
-        </div>
-      ))}
+      {posts.data.length === 0 ? (
+        <div>This user has no posts!</div>
+      ) : (
+        posts.data.map((post) => (
+          <div key={post.id} className="p-4 border border-black">
+            <p>User id: {post.userId}</p>
+            <p>Post id: {post.id}</p>
+            <p>Title: {post.title}</p>
+            <p>Body: {post.body}</p>
+          </div>
+        ))
+      )}
     </div>
   );
 };

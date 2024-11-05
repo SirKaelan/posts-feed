@@ -19,7 +19,19 @@ export const useFetchUsers = () => {
     const usersRequest = fetchUsers();
     usersRequest.then((users) => {
       if (users.status === RequestStatus.Success) {
-        setUsers(users);
+        const calculatedNewId: number =
+          users.data[users.data.length - 1].id + 1;
+        const newUser: User = {
+          id: calculatedNewId,
+          name: "You Youer",
+          username: "You",
+          email: "you@geemael.com",
+        };
+
+        setUsers({
+          status: RequestStatus.Success,
+          data: [...users.data, newUser],
+        });
       } else {
         setUsers(users);
       }
