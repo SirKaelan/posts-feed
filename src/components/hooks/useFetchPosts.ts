@@ -93,10 +93,10 @@ const addPostsToState = (
 ) => {
   request.then((posts) => {
     if (posts.status === RequestStatus.Success) {
+      // Merge posts slice a portion of them
       posts.data = [...posts.data, ...lsPosts]
         .slice(-limit)
         .sort((a, b) => b.id - a.id);
-      console.log("Posts:", posts.data);
       setState(posts);
     } else {
       setState(posts);

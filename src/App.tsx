@@ -36,7 +36,7 @@ function App() {
           />
         )}
       </div>
-      <PostList posts={posts} />
+      <PostList posts={posts} currentUser={currentUser} setPosts={setPosts} />
     </div>
   );
 }

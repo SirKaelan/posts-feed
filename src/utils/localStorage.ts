@@ -18,6 +18,30 @@ export const getFromLocalStorage = <T>(key: string): T | null => {
   }
 };
 
+export const deleteFromLocalStorage = <T>(
+  key: string,
+  predicate: (item: T) => boolean
+): void => {
+  const value = getFromLocalStorage<T[]>(key);
+
+  if (value) {
+    const updatedValue = value.filter((item) => !predicate(item));
+
+    // There are no items left in the value array
+    if (updatedValue.length === 0) {
+      {
+        // Remove key
+        localStorage.removeItem(key);
+        return;
+      }
+    }
+
+    saveToLocalStorage<T[]>(key, updatedValue);
+  } else {
+    console.warn(`No value found for key ${key} in local storage`);
+  }
+};
+
 export const getAllLocalStorageValues = <T>(): T[] => {
   const values: T[] = [];
 
