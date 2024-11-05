@@ -25,7 +25,7 @@ export const useFetchPosts = (selectedUser: number | "all", limit: number) => {
     }
   }, [selectedUser, limit]);
 
-  return posts;
+  return { posts, setPosts };
 };
 
 // Fetching function

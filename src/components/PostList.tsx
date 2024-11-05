@@ -1,14 +1,10 @@
-import { useFetchPosts } from "./hooks/useFetchPosts";
-import { RequestStatus } from "../types";
+import { Post, RequestState, RequestStatus } from "../types";
 
 type PostListProps = {
-  selectedUser: number | "all";
-  limit: number;
+  posts: RequestState<Post[]>;
 };
 
-export const PostList = ({ selectedUser, limit }: PostListProps) => {
-  const posts = useFetchPosts(selectedUser, limit);
-
+export const PostList = ({ posts }: PostListProps) => {
   if (posts.status === RequestStatus.Loading) return <p>Loading...</p>;
   if (posts.status === RequestStatus.Error) return <p>Couldn't fetch posts!</p>;
 

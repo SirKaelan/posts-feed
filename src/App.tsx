@@ -5,11 +5,13 @@ import { SelectUser } from "./components/SelectUser";
 import { SelectUserAccount } from "./components/SelectUserAccount";
 import { AddPost } from "./components/AddPost";
 import { SelectChangeEvent } from "./types";
+import { useFetchPosts } from "./components/hooks/useFetchPosts";
 
 function App() {
-  const users = useFetchUsers();
   const [selectedUser, setSelectedUser] = useState<number | "all">("all");
   const [loggedUser, setLoggedUser] = useState<number>(1);
+  const users = useFetchUsers();
+  const { posts, setPosts } = useFetchPosts(selectedUser, 20);
 
   const handleUserChange = (e: SelectChangeEvent) => {
     const userId = e.target.value === "all" ? "all" : Number(e.target.value);
@@ -33,9 +35,9 @@ function App() {
           users={users}
           handleChange={handleUserChange}
         />
-        <AddPost loggedUser={loggedUser} />
+        <AddPost loggedUser={loggedUser} setPosts={setPosts} />
       </div>
-      <PostList selectedUser={selectedUser} limit={20} />
+      <PostList posts={posts} />
     </div>
   );
 }

@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { NewPostForm } from "./NewPostForm";
+import { Post, RequestState } from "../types";
 
 type AddPostProps = {
   loggedUser: number;
+  setPosts: React.Dispatch<React.SetStateAction<RequestState<Post[]>>>;
 };
 
-export const AddPost = ({ loggedUser }: AddPostProps) => {
+export const AddPost = ({ loggedUser, setPosts }: AddPostProps) => {
   const [showForm, setShowForm] = useState<boolean>(false);
 
   const handleNewPostClick = () => {
@@ -29,6 +31,7 @@ export const AddPost = ({ loggedUser }: AddPostProps) => {
         <NewPostForm
           handleCloseClick={handleFormCloseClick}
           loggedUser={loggedUser}
+          setPosts={setPosts}
         />
       )}
     </div>
