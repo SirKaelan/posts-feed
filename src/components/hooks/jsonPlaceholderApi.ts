@@ -13,11 +13,11 @@ export const getAllPosts = async (
   const posts = await fetchAllPosts();
 
   if (posts.status === RequestStatus.Error) {
-    return { status: RequestStatus.Error, errorMsg: posts.errorMsg };
+    return posts;
   }
 
   const limitedPosts = limitPosts(posts.data, limit);
-  return { status: RequestStatus.Success, data: limitedPosts };
+  return { ...posts, data: limitedPosts };
 };
 
 export const getUserPosts = async (
@@ -27,11 +27,11 @@ export const getUserPosts = async (
   const posts = await fetchUserPosts(userId);
 
   if (posts.status === RequestStatus.Error) {
-    return { status: RequestStatus.Error, errorMsg: posts.errorMsg };
+    return posts;
   }
 
   const limitedPosts = limitPosts(posts.data, limit);
-  return { status: RequestStatus.Success, data: limitedPosts };
+  return { ...posts, data: limitedPosts };
 };
 
 // Helper functions
@@ -71,7 +71,9 @@ const fetchUserPosts = async (
     const { data } = await axios.get<Post[]>(
       "https://jsonplaceholder.typicode.com/posts",
       {
-        params: userId,
+        params: {
+          userId,
+        },
       }
     );
 

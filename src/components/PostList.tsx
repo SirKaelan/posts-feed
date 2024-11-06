@@ -5,18 +5,12 @@ import { config } from "../config";
 import { usePosts } from "./hooks/usePosts";
 
 type PostListProps = {
-  postz: RequestState<Post[]>;
   users: RequestState<User[]>;
   currentUser: User | null;
   setPosts: React.Dispatch<React.SetStateAction<RequestState<Post[]>>>;
 };
 
-export const PostList = ({
-  postz,
-  users,
-  currentUser,
-  setPosts,
-}: PostListProps) => {
+export const PostList = ({ users, currentUser, setPosts }: PostListProps) => {
   const posts = usePosts();
 
   const handleDeletePost = (post: Post) => {
@@ -66,6 +60,7 @@ export const PostList = ({
               </button>
             )}
             <h2 className="font-bold text-gray-700 text-xl">
+              {post.id}:{" "}
               {capitalizeFirstLetter(
                 truncateText(post.title, config.cardTitleLength)
               )}

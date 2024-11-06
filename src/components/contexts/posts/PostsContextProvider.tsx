@@ -10,9 +10,12 @@ export const PostsProvider = ({ children }: PostsProviderProps) => {
   const [posts, setPosts] = useState<RequestState<Post[]>>({
     status: RequestStatus.Loading,
   });
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
 
   return (
-    <PostsContext.Provider value={{ posts, setPosts }}>
+    <PostsContext.Provider
+      value={{ posts, setPosts, selectedUserId, setSelectedUserId }}
+    >
       {children}
     </PostsContext.Provider>
   );

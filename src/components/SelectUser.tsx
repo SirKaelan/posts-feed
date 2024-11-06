@@ -1,24 +1,26 @@
-import { RequestState, RequestStatus, User } from "../types";
+import { RequestState, RequestStatus, SelectChangeEvent, User } from "../types";
+import { useUsers } from "./hooks/useUser";
 
 type SelectUserProps = {
-  handleChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  selectedUser: number | "all";
   users: RequestState<User[]>;
 };
 
-export const SelectUser = ({
-  handleChange,
-  selectedUser,
-  users,
-}: SelectUserProps) => {
+export const SelectUser = ({ users }: SelectUserProps) => {
+  const { selectedUserId, setSelectedUserId } = useUsers();
+
+  const handleUserChange = (e: SelectChangeEvent) => {
+    const userId = e.target.value === "all" ? null : Number(e.target.value);
+    setSelectedUserId(userId);
+  };
+
   return (
     <div className="flex flex-col items-center gap-2 sm:flex-row">
       <label htmlFor="users">Get posts for:</label>
       <select
         className="border border-gray-400 rounded"
         id="users"
-        value={selectedUser}
-        onChange={handleChange}
+        value={selectedUserId ?? "all"}
+        onChange={handleUserChange}
       >
         <option value="all">All</option>
         {users.status === RequestStatus.Success &&

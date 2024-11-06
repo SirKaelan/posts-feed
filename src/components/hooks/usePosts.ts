@@ -6,13 +6,19 @@ import { config } from "../../config";
 import { getAllPosts, getUserPosts } from "./jsonPlaceholderApi";
 
 export const usePosts = () => {
-  const { posts, setPosts } = usePostsContext();
+  const { posts, setPosts, selectedUserId } = usePostsContext();
 
   useEffect(() => {
     setPosts({ status: RequestStatus.Loading });
 
-    getAllPosts(config.postsDisplayLimit).then((data) => setPosts(data));
-  }, [setPosts]);
+    if (selectedUserId) {
+      getUserPosts(selectedUserId, config.postsDisplayLimit).then((data) =>
+        setPosts(data)
+      );
+    } else {
+      getAllPosts(config.postsDisplayLimit).then((data) => setPosts(data));
+    }
+  }, [setPosts, selectedUserId]);
 
   return posts;
 };

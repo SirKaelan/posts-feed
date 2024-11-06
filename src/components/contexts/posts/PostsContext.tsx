@@ -4,6 +4,8 @@ import { Post, RequestState } from "../../../types";
 type PostsContextType = {
   posts: RequestState<Post[]>;
   setPosts: React.Dispatch<React.SetStateAction<RequestState<Post[]>>>;
+  selectedUserId: number | null;
+  setSelectedUserId: React.Dispatch<React.SetStateAction<number | null>>;
 };
 
 export const PostsContext = createContext<PostsContextType | undefined>(
