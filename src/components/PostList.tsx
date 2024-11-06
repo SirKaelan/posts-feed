@@ -2,19 +2,23 @@ import { Post, RequestState, RequestStatus, User } from "../types";
 import { deleteFromLocalStorage } from "../utils/localStorage";
 import { config } from "../config";
 
+import { usePosts } from "./hooks/usePosts";
+
 type PostListProps = {
-  posts: RequestState<Post[]>;
+  postz: RequestState<Post[]>;
   users: RequestState<User[]>;
   currentUser: User | null;
   setPosts: React.Dispatch<React.SetStateAction<RequestState<Post[]>>>;
 };
 
 export const PostList = ({
-  posts,
+  postz,
   users,
   currentUser,
   setPosts,
 }: PostListProps) => {
+  const posts = usePosts();
+
   const handleDeletePost = (post: Post) => {
     if (!currentUser) return;
 
