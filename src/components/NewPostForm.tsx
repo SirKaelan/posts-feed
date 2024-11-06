@@ -1,12 +1,14 @@
 import { useState } from "react";
 import axios from "axios";
-import { Post, RequestState, RequestStatus, User } from "../types";
+import { NewPost, Post, RequestState, RequestStatus, User } from "../types";
 import {
   getFromLocalStorage,
   saveToLocalStorage,
   getAllLocalStorageValues,
 } from "../utils/localStorage";
 import { config } from "../config";
+import { useCreatePost } from "./hooks/useCreatePost";
+import { useLoggedInUser } from "./hooks/useLoggedInUser";
 
 type NewPostFormProps = {
   currentUser: User;
@@ -21,6 +23,9 @@ export const NewPostForm = ({
   setPosts,
   handleCloseClick,
 }: NewPostFormProps) => {
+  const { createPost } = useCreatePost();
+  const { loggedInUser } = useLoggedInUser();
+
   const [formValues, setFormValues] = useState<FormValues>({
     title: "",
     body: "",
@@ -61,24 +66,26 @@ export const NewPostForm = ({
     // Send post request only if there are not errors
     if (Object.values(errors).every((value) => value.length === 0)) {
       const newPost: NewPost = {
-        userId: currentUser.id,
+        userId: loggedInUser.id,
         title: formValues.title,
         body: formValues.body,
       };
 
-      const response = sendNewPostToAPI(newPost);
-      response.then((newPost) => {
-        handleCloseClick();
-        if (newPost) {
-          const newPostId = savePostToLocalStorage(newPost, currentUser.id);
+      createPost(newPost);
 
-          if (currentUser.id === selectedUser || selectedUser === "all") {
-            addPostToPostsState(setPosts, newPost, newPostId);
-          }
-        } else {
-          console.error("Nothing was received from API.");
-        }
-      });
+      // const response = sendNewPostToAPI(newPost);
+      // response.then((newPost) => {
+      //   handleCloseClick();
+      //   if (newPost) {
+      //     const newPostId = savePostToLocalStorage(newPost, currentUser.id);
+
+      //     if (currentUser.id === selectedUser || selectedUser === "all") {
+      //       addPostToPostsState(setPosts, newPost, newPostId);
+      //     }
+      //   } else {
+      //     console.error("Nothing was received from API.");
+      //   }
+      // });
     }
   };
 
@@ -146,12 +153,6 @@ type FormValues = {
 };
 
 type FormErrors = {
-  title: string;
-  body: string;
-};
-
-type NewPost = {
-  userId: number;
   title: string;
   body: string;
 };

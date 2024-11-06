@@ -20,5 +20,5 @@ export const usePosts = () => {
     }
   }, [setPosts, selectedUserId]);
 
-  return posts;
+  return { posts };
 };

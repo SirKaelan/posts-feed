@@ -18,5 +18,5 @@ export const useUsers = () => {
       }
     });
   }, [setUsers, loggedInUser]);
-  return users;
+  return { users };
 };

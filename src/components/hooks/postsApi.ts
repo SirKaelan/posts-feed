@@ -1,6 +1,7 @@
 import axios from "axios";
 import {
   ErrorStatus,
+  NewPost,
   Post,
   RequestState,
   RequestStatus,
@@ -40,6 +41,14 @@ const limitPosts = (posts: Post[], limit: number): Post[] => {
 };
 
 // API Functions
+export const sendNewPost = async (post: NewPost): Promise<void> => {
+  try {
+    await axios.post<Post>("https://jsonplaceholder.typicode.com/posts", post);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
 const fetchAllPosts = async (): Promise<
   SuccessStatus<Post[]> | ErrorStatus
 > => {

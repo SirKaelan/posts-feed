@@ -1,5 +1,5 @@
 import { RequestState, RequestStatus, SelectChangeEvent, User } from "../types";
-import { useUser } from "./hooks/useUser";
+import { useSelectedUser } from "./hooks/useSelectedUser";
 import { useUsers } from "./hooks/useUsers";
 
 type SelectUserProps = {
@@ -7,8 +7,8 @@ type SelectUserProps = {
 };
 
 export const SelectUser = ({ userz }: SelectUserProps) => {
-  const { selectedUserId, setSelectedUserId } = useUser();
-  const users = useUsers();
+  const { selectedUserId, setSelectedUserId } = useSelectedUser();
+  const { users } = useUsers();
 
   const handleUserChange = (e: SelectChangeEvent) => {
     const userId = e.target.value === "all" ? null : Number(e.target.value);

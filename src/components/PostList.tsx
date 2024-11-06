@@ -11,7 +11,7 @@ type PostListProps = {
 };
 
 export const PostList = ({ users, currentUser, setPosts }: PostListProps) => {
-  const posts = usePosts();
+  const { posts } = usePosts();
 
   const handleDeletePost = (post: Post) => {
     if (!currentUser) return;
