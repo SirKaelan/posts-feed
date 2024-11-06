@@ -1,41 +1,36 @@
-import { Post, RequestState, RequestStatus, User } from "../types";
-import { deleteFromLocalStorage } from "../utils/localStorage";
+import { Post, RequestStatus } from "../types";
 import { config } from "../config";
 
 import { usePosts } from "./hooks/usePosts";
+import { useLoggedInUser } from "./hooks/useLoggedInUser";
+import { useUsers } from "./hooks/useUsers";
 
-type PostListProps = {
-  users: RequestState<User[]>;
-  currentUser: User | null;
-  setPosts: React.Dispatch<React.SetStateAction<RequestState<Post[]>>>;
-};
-
-export const PostList = ({ users, currentUser, setPosts }: PostListProps) => {
+export const PostList = () => {
   const { posts } = usePosts();
+  const { loggedInUser } = useLoggedInUser();
+  const { users } = useUsers();
 
   const handleDeletePost = (post: Post) => {
-    if (!currentUser) return;
-
-    // Remove post from local storage
-    deleteFromLocalStorage<Post>(
-      currentUser.id.toString(),
-      (lsPost) => post.id === lsPost.id
-    );
-
-    // Update posts state
-    setPosts((prevState) => {
-      if (prevState.status === RequestStatus.Success) {
-        const newPostsArr = prevState.data.filter(
-          (oldPost) => oldPost.id !== post.id
-        );
-        return {
-          status: RequestStatus.Success,
-          data: [...newPostsArr],
-        };
-      } else {
-        return prevState;
-      }
-    });
+    // if (!currentUser) return;
+    // // Remove post from local storage
+    // deleteFromLocalStorage<Post>(
+    //   currentUser.id.toString(),
+    //   (lsPost) => post.id === lsPost.id
+    // );
+    // // Update posts state
+    // setPosts((prevState) => {
+    //   if (prevState.status === RequestStatus.Success) {
+    //     const newPostsArr = prevState.data.filter(
+    //       (oldPost) => oldPost.id !== post.id
+    //     );
+    //     return {
+    //       status: RequestStatus.Success,
+    //       data: [...newPostsArr],
+    //     };
+    //   } else {
+    //     return prevState;
+    //   }
+    // });
   };
 
   if (posts.status === RequestStatus.Loading) return <p>Loading...</p>;
@@ -51,7 +46,7 @@ export const PostList = ({ users, currentUser, setPosts }: PostListProps) => {
             key={post.id}
             className="flex flex-col gap-4 w-72 p-4 border border-gray-400 rounded-lg transition relative hover:cursor-pointer hover:shadow-xl hover:-translate-y-2 md:p-7"
           >
-            {currentUser && currentUser?.id === post.userId && (
+            {loggedInUser.id === post.userId && (
               <button
                 onClick={() => handleDeletePost(post)}
                 className="absolute top-4 right-4 py-2 px-3 leading-none rounded-md text-gray-400 transition hover:text-white hover:bg-red-500"

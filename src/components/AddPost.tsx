@@ -1,18 +1,7 @@
 import { useState } from "react";
 import { NewPostForm } from "./NewPostForm";
-import { Post, RequestState, User } from "../types";
 
-type AddPostProps = {
-  currentUser: User;
-  selectedUser: number | "all";
-  setPosts: React.Dispatch<React.SetStateAction<RequestState<Post[]>>>;
-};
-
-export const AddPost = ({
-  currentUser,
-  selectedUser,
-  setPosts,
-}: AddPostProps) => {
+export const AddPost = () => {
   const [showForm, setShowForm] = useState<boolean>(false);
 
   const handleNewPostClick = () => {
@@ -32,14 +21,7 @@ export const AddPost = ({
         Add New Post
       </button>
 
-      {showForm && (
-        <NewPostForm
-          currentUser={currentUser}
-          selectedUser={selectedUser}
-          handleCloseClick={handleFormCloseClick}
-          setPosts={setPosts}
-        />
-      )}
+      {showForm && <NewPostForm handleCloseClick={handleFormCloseClick} />}
     </div>
   );
 };

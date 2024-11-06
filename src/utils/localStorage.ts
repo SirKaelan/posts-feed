@@ -1,45 +1,15 @@
 export const saveToLocalStorage = <T>(key: string, value: T): void => {
-  try {
-    const serializedValue = JSON.stringify(value);
-    localStorage.setItem(key, serializedValue);
-  } catch (err) {
-    console.error("Could not save to localStorage:", err);
-  }
+  const serializedValue = JSON.stringify(value);
+  localStorage.setItem(key, serializedValue);
 };
 
-export const getFromLocalStorage = <T>(key: string): T | null => {
-  try {
-    const serializedValue = localStorage.getItem(key);
-    if (serializedValue === null) return null;
-    return JSON.parse(serializedValue) as T;
-  } catch (err) {
-    console.error("Could not retrieve data from localStorage:", err);
-    return null;
+export const getFromLocalStorage = <T>(key: string, initialValue: T): T => {
+  const serializedValue = localStorage.getItem(key);
+  if (serializedValue === null) {
+    saveToLocalStorage(key, initialValue);
+    return initialValue;
   }
-};
-
-export const deleteFromLocalStorage = <T>(
-  key: string,
-  predicate: (item: T) => boolean
-): void => {
-  const value = getFromLocalStorage<T[]>(key);
-
-  if (value) {
-    const updatedValue = value.filter((item) => !predicate(item));
-
-    // There are no items left in the value array
-    if (updatedValue.length === 0) {
-      {
-        // Remove key
-        localStorage.removeItem(key);
-        return;
-      }
-    }
-
-    saveToLocalStorage<T[]>(key, updatedValue);
-  } else {
-    console.warn(`No value found for key ${key} in local storage`);
-  }
+  return JSON.parse(serializedValue) as T;
 };
 
 export const getAllLocalStorageValues = <T>(): T[] => {

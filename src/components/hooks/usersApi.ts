@@ -1,13 +1,17 @@
 import axios from "axios";
-import { RequestState, RequestStatus, User } from "../../types";
+import { ErrorStatus, RequestStatus, SuccessStatus, User } from "../../types";
 
-export const getAllUsers = async (): Promise<RequestState<User[]>> => {
-  const users: RequestState<User[]> = await fetchAllUsers();
+export const getAllUsers = async (): Promise<
+  SuccessStatus<User[]> | ErrorStatus
+> => {
+  const users = await fetchAllUsers();
 
   return users;
 };
 
-const fetchAllUsers = async (): Promise<RequestState<User[]>> => {
+const fetchAllUsers = async (): Promise<
+  SuccessStatus<User[]> | ErrorStatus
+> => {
   try {
     const { data } = await axios.get<User[]>(
       "https://jsonplaceholder.typicode.com/users"

@@ -1,28 +1,18 @@
 import { useState } from "react";
-import axios from "axios";
-import { NewPost, Post, RequestState, RequestStatus, User } from "../types";
+import { NewPost, Post } from "../types";
 import {
   getFromLocalStorage,
   saveToLocalStorage,
   getAllLocalStorageValues,
 } from "../utils/localStorage";
-import { config } from "../config";
 import { useCreatePost } from "./hooks/useCreatePost";
 import { useLoggedInUser } from "./hooks/useLoggedInUser";
 
 type NewPostFormProps = {
-  currentUser: User;
-  selectedUser: number | "all";
-  setPosts: React.Dispatch<React.SetStateAction<RequestState<Post[]>>>;
   handleCloseClick: () => void;
 };
 
-export const NewPostForm = ({
-  currentUser,
-  selectedUser,
-  setPosts,
-  handleCloseClick,
-}: NewPostFormProps) => {
+export const NewPostForm = ({ handleCloseClick }: NewPostFormProps) => {
   const { createPost } = useCreatePost();
   const { loggedInUser } = useLoggedInUser();
 
@@ -72,20 +62,6 @@ export const NewPostForm = ({
       };
 
       createPost(newPost);
-
-      // const response = sendNewPostToAPI(newPost);
-      // response.then((newPost) => {
-      //   handleCloseClick();
-      //   if (newPost) {
-      //     const newPostId = savePostToLocalStorage(newPost, currentUser.id);
-
-      //     if (currentUser.id === selectedUser || selectedUser === "all") {
-      //       addPostToPostsState(setPosts, newPost, newPostId);
-      //     }
-      //   } else {
-      //     console.error("Nothing was received from API.");
-      //   }
-      // });
     }
   };
 
@@ -179,19 +155,6 @@ const validators: ValidatorsList = {
   body: validateBody,
 };
 
-const sendNewPostToAPI = async (post: NewPost) => {
-  try {
-    const { data } = await axios.post<Post>(
-      "https://jsonplaceholder.typicode.com/posts",
-      post
-    );
-
-    return data;
-  } catch (err) {
-    console.error(err);
-  }
-};
-
 const savePostToLocalStorage = (
   newPost: Post,
   currentUserId: number
@@ -235,29 +198,4 @@ const savePostToLocalStorage = (
       return editedPost.id;
     }
   }
-};
-
-const addPostToPostsState = (
-  setPosts: React.Dispatch<React.SetStateAction<RequestState<Post[]>>>,
-  newPost: Post,
-  newPostId: number
-) => {
-  setPosts((prevState) => {
-    if (prevState.status === RequestStatus.Success) {
-      const newPostFixed: Post = {
-        ...newPost,
-        id: newPostId,
-      };
-
-      return {
-        status: RequestStatus.Success,
-        data: [newPostFixed, ...prevState.data].slice(
-          0,
-          config.postsDisplayLimit
-        ),
-      };
-    } else {
-      return prevState;
-    }
-  });
 };

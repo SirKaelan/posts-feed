@@ -9,6 +9,7 @@ type PostsContextType = {
   users: RequestState<User[]>;
   setUsers: React.Dispatch<React.SetStateAction<RequestState<User[]>>>;
   loggedInUser: User;
+  reloadPosts: () => void;
 };
 
 export const PostsContext = createContext<PostsContextType | undefined>(

@@ -3,14 +3,13 @@ import {
   ErrorStatus,
   NewPost,
   Post,
-  RequestState,
   RequestStatus,
   SuccessStatus,
 } from "../../types";
 
 export const getAllPosts = async (
   limit: number
-): Promise<RequestState<Post[]>> => {
+): Promise<SuccessStatus<Post[]> | ErrorStatus> => {
   const posts = await fetchAllPosts();
 
   if (posts.status === RequestStatus.Error) {
@@ -24,7 +23,7 @@ export const getAllPosts = async (
 export const getUserPosts = async (
   userId: number,
   limit: number
-): Promise<RequestState<Post[]>> => {
+): Promise<SuccessStatus<Post[]> | ErrorStatus> => {
   const posts = await fetchUserPosts(userId);
 
   if (posts.status === RequestStatus.Error) {
