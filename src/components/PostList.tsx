@@ -4,33 +4,16 @@ import { config } from "../config";
 import { usePosts } from "./hooks/usePosts";
 import { useLoggedInUser } from "./hooks/useLoggedInUser";
 import { useUsers } from "./hooks/useUsers";
+import { useDeletePost } from "./hooks/useDeletePost";
 
 export const PostList = () => {
   const { posts } = usePosts();
-  const { loggedInUser } = useLoggedInUser();
   const { users } = useUsers();
+  const { deletePost } = useDeletePost();
+  const { loggedInUser } = useLoggedInUser();
 
-  const handleDeletePost = (post: Post) => {
-    // if (!currentUser) return;
-    // // Remove post from local storage
-    // deleteFromLocalStorage<Post>(
-    //   currentUser.id.toString(),
-    //   (lsPost) => post.id === lsPost.id
-    // );
-    // // Update posts state
-    // setPosts((prevState) => {
-    //   if (prevState.status === RequestStatus.Success) {
-    //     const newPostsArr = prevState.data.filter(
-    //       (oldPost) => oldPost.id !== post.id
-    //     );
-    //     return {
-    //       status: RequestStatus.Success,
-    //       data: [...newPostsArr],
-    //     };
-    //   } else {
-    //     return prevState;
-    //   }
-    // });
+  const handleDeleteClick = (post: Post) => {
+    deletePost(post);
   };
 
   if (posts.status === RequestStatus.Loading) return <p>Loading...</p>;
@@ -48,7 +31,7 @@ export const PostList = () => {
           >
             {loggedInUser.id === post.userId && (
               <button
-                onClick={() => handleDeletePost(post)}
+                onClick={() => handleDeleteClick(post)}
                 className="absolute top-4 right-4 py-2 px-3 leading-none rounded-md text-gray-400 transition hover:text-white hover:bg-red-500"
               >
                 &#10005;

@@ -2,18 +2,18 @@ import { ErrorStatus, Post, RequestStatus, SuccessStatus } from "../../types";
 import { config } from "../../config";
 
 import { getAllPosts, getUserPosts } from "./postsApi";
-import { getAllLocalPosts, getAllLocalUserPosts } from "./localPostsApi";
+import { getLocalPosts, getLocalPostsByUserId } from "./localPostsApi";
 
 export const loadPosts = async (selectedUserId: number | null) => {
   if (selectedUserId) {
-    return await grabAllUserPosts(selectedUserId);
+    return await grabPostsByUserId(selectedUserId);
   } else {
     return await grabAllPosts();
   }
 };
 
 const grabAllPosts = async (): Promise<SuccessStatus<Post[]> | ErrorStatus> => {
-  const localPosts = getAllLocalPosts(config.postsDisplayLimit);
+  const localPosts = getLocalPosts(config.postsDisplayLimit);
   if (localPosts.length === config.postsDisplayLimit) {
     return { status: RequestStatus.Success, data: localPosts };
   }
@@ -26,10 +26,10 @@ const grabAllPosts = async (): Promise<SuccessStatus<Post[]> | ErrorStatus> => {
   return { ...apiPosts, data: [...localPosts, ...apiPosts.data] };
 };
 
-const grabAllUserPosts = async (
+const grabPostsByUserId = async (
   selectedUserId: number
 ): Promise<SuccessStatus<Post[]> | ErrorStatus> => {
-  const localUserPosts = getAllLocalUserPosts(
+  const localUserPosts = getLocalPostsByUserId(
     selectedUserId,
     config.postsDisplayLimit
   );

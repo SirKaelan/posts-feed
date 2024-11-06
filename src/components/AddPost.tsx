@@ -21,7 +21,7 @@ export const AddPost = () => {
         Add New Post
       </button>
 
-      {showForm && <NewPostForm handleCloseClick={handleFormCloseClick} />}
+      {showForm && <NewPostForm closeForm={handleFormCloseClick} />}
     </div>
   );
 };

@@ -33,8 +33,8 @@ export const PostsProvider = ({ children }: PostsProviderProps) => {
     []
   );
 
-  const reloadPosts = () => {
-    loadPosts(selectedUserId).then((data) => setPosts(data));
+  const reloadPosts = (userId: number | null): void => {
+    loadPosts(userId).then((data) => setPosts(data));
   };
 
   useEffect(() => {

@@ -1,18 +1,13 @@
 import { useState } from "react";
-import { NewPost, Post } from "../types";
-import {
-  getFromLocalStorage,
-  saveToLocalStorage,
-  getAllLocalStorageValues,
-} from "../utils/localStorage";
+import { NewPost } from "../types";
 import { useCreatePost } from "./hooks/useCreatePost";
 import { useLoggedInUser } from "./hooks/useLoggedInUser";
 
 type NewPostFormProps = {
-  handleCloseClick: () => void;
+  closeForm: () => void;
 };
 
-export const NewPostForm = ({ handleCloseClick }: NewPostFormProps) => {
+export const NewPostForm = ({ closeForm }: NewPostFormProps) => {
   const { createPost } = useCreatePost();
   const { loggedInUser } = useLoggedInUser();
 
@@ -62,18 +57,25 @@ export const NewPostForm = ({ handleCloseClick }: NewPostFormProps) => {
       };
 
       createPost(newPost);
+      closeForm();
     }
   };
 
   return (
     <div
-      onClick={handleCloseClick}
+      onClick={closeForm}
       className="absolute top-0 bottom-0 left-0 right-0 bg-black bg-opacity-40 flex justify-center items-center z-10"
     >
       <div
         onClick={handleFormClick}
-        className="bg-white py-16 px-20 rounded-lg flex flex-col gap-14 items-center"
+        className="bg-white py-16 px-20 rounded-lg flex flex-col gap-14 items-center relative"
       >
+        <button
+          onClick={closeForm}
+          className="absolute top-4 right-4 py-2 px-3 leading-none rounded-md text-gray-400 transition hover:text-white hover:bg-red-500"
+        >
+          &#10005;
+        </button>
         <h1 className="font-bold text-xl text-gray-800">ADD NEW POST</h1>
         <form onSubmit={handleFormSubmit} className="flex flex-col gap-5">
           <div className="flex flex-col">
@@ -153,49 +155,4 @@ type ValidatorsList = {
 const validators: ValidatorsList = {
   title: validateTitle,
   body: validateBody,
-};
-
-const savePostToLocalStorage = (
-  newPost: Post,
-  currentUserId: number
-): number => {
-  const lsKey = currentUserId.toString();
-  // Grab custom posts from LS
-  const currentUserPosts = getFromLocalStorage<Post[]>(lsKey);
-
-  if (currentUserPosts) {
-    // Get all local storage values
-    const allPosts = getAllLocalStorageValues<Post>().sort(
-      (a, b) => b.id - a.id
-    );
-
-    // if custom posts are stored in LS then modify and add again
-    const editedPost: Post = {
-      ...newPost,
-      id: allPosts[0].id + 1,
-    };
-    saveToLocalStorage<Post[]>(lsKey, [editedPost, ...currentUserPosts]);
-    return editedPost.id;
-  } else {
-    // might be empty
-    const allPosts = getAllLocalStorageValues<Post>().sort(
-      (a, b) => b.id - a.id
-    );
-
-    // if there are no other users with posts
-    if (allPosts.length === 0) {
-      // save new post as is
-      saveToLocalStorage<Post[]>(lsKey, [newPost]);
-      return newPost.id;
-    } else {
-      // if there are other users with posts
-      const editedPost: Post = {
-        ...newPost,
-        // check the latest custom post's id and add + 1 to it
-        id: allPosts[0].id + 1,
-      };
-      saveToLocalStorage<Post[]>(lsKey, [editedPost]);
-      return editedPost.id;
-    }
-  }
 };
