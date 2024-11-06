@@ -1,12 +1,14 @@
 import { RequestState, RequestStatus, SelectChangeEvent, User } from "../types";
-import { useUsers } from "./hooks/useUser";
+import { useUser } from "./hooks/useUser";
+import { useUsers } from "./hooks/useUsers";
 
 type SelectUserProps = {
-  users: RequestState<User[]>;
+  userz: RequestState<User[]>;
 };
 
-export const SelectUser = ({ users }: SelectUserProps) => {
-  const { selectedUserId, setSelectedUserId } = useUsers();
+export const SelectUser = ({ userz }: SelectUserProps) => {
+  const { selectedUserId, setSelectedUserId } = useUser();
+  const users = useUsers();
 
   const handleUserChange = (e: SelectChangeEvent) => {
     const userId = e.target.value === "all" ? null : Number(e.target.value);

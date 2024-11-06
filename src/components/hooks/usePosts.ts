@@ -3,7 +3,7 @@ import { usePostsContext } from "../contexts/posts/PostsContext";
 import { RequestStatus } from "../../types";
 import { config } from "../../config";
 
-import { getAllPosts, getUserPosts } from "./jsonPlaceholderApi";
+import { getAllPosts, getUserPosts } from "./postsApi";
 
 export const usePosts = () => {
   const { posts, setPosts, selectedUserId } = usePostsContext();

@@ -1,6 +1,6 @@
 import { usePostsContext } from "../contexts/posts/PostsContext";
 
-export const useUsers = () => {
+export const useUser = () => {
   const { selectedUserId, setSelectedUserId } = usePostsContext();
 
   return { selectedUserId, setSelectedUserId };

@@ -18,7 +18,7 @@ function App() {
   return (
     <div className="p-10 flex flex-col gap-10 md:p-20">
       <div className="flex flex-col-reverse gap-6 justify-between items-center md:flex-row">
-        <SelectUser users={users} />
+        <SelectUser userz={users} />
         {currentUser && (
           <AddPost
             currentUser={currentUser}

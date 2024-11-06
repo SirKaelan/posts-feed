@@ -1,11 +1,14 @@
 import { createContext, useContext } from "react";
-import { Post, RequestState } from "../../../types";
+import { Post, RequestState, User } from "../../../types";
 
 type PostsContextType = {
   posts: RequestState<Post[]>;
   setPosts: React.Dispatch<React.SetStateAction<RequestState<Post[]>>>;
   selectedUserId: number | null;
   setSelectedUserId: React.Dispatch<React.SetStateAction<number | null>>;
+  users: RequestState<User[]>;
+  setUsers: React.Dispatch<React.SetStateAction<RequestState<User[]>>>;
+  loggedInUser: User;
 };
 
 export const PostsContext = createContext<PostsContextType | undefined>(
