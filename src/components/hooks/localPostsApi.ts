@@ -30,3 +30,19 @@ export const getAllLocalPosts = (limit: number): Post[] => {
 
   return localPosts.posts.slice(0, limit);
 };
+
+export const getAllLocalUserPosts = (
+  selectedUserId: number,
+  limit: number
+): Post[] => {
+  const localPosts = getFromLocalStorage<LocalPosts>(localPostsKey, {
+    nextId: 500,
+    posts: [],
+  });
+
+  const userPosts = localPosts.posts.filter(
+    (post) => post.userId === selectedUserId
+  );
+
+  return userPosts.slice(0, limit);
+};
