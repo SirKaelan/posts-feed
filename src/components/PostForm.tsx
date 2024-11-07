@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import { FormInput } from "./FormInput";
+import { CloseButton } from "./CloseButton";
 
 import { useCreatePost } from "./hooks/useCreatePost";
 import { useLoggedInUser } from "./hooks/useLoggedInUser";
@@ -51,7 +52,7 @@ export const PostForm = ({ closeForm }: PostFormProps) => {
     };
     setFormErrors(errors);
 
-    // Send post request only if there are not errors
+    // Send post request only if there are no errors
     if (Object.values(errors).every((value) => value.length === 0)) {
       const newPost: NewPost = {
         userId: loggedInUser.id,
@@ -75,12 +76,7 @@ export const PostForm = ({ closeForm }: PostFormProps) => {
         onClick={handleFormClick}
         className="bg-white py-16 px-20 rounded-lg flex flex-col gap-14 items-center relative"
       >
-        <button
-          onClick={closeForm}
-          className="absolute top-4 right-4 py-2 px-3 leading-none rounded-md text-gray-400 transition hover:text-white hover:bg-red-500"
-        >
-          &#10005;
-        </button>
+        <CloseButton handleClick={closeForm} />
         <h1 className="font-bold text-xl text-gray-800 uppercase">
           Add New Post
         </h1>
