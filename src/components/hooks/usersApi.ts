@@ -1,6 +1,8 @@
 import axios from "axios";
 import { ErrorStatus, RequestStatus, SuccessStatus, User } from "../../types";
 
+const url = "https://jsonplaceholder.typicode.com/users";
+
 export const getAllUsers = async (): Promise<
   SuccessStatus<User[]> | ErrorStatus
 > => {
@@ -13,9 +15,7 @@ const fetchAllUsers = async (): Promise<
   SuccessStatus<User[]> | ErrorStatus
 > => {
   try {
-    const { data } = await axios.get<User[]>(
-      "https://jsonplaceholder.typicode.com/users"
-    );
+    const { data } = await axios.get<User[]>(url);
 
     return {
       status: RequestStatus.Success,

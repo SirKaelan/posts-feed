@@ -1,7 +1,7 @@
-import { usePostsContext } from "../contexts/posts/PostsContext";
+import { useAppStateContext } from "../contexts/app/AppStateContext";
 
 export const useLoggedInUser = () => {
-  const { loggedInUser } = usePostsContext();
+  const { loggedInUser } = useAppStateContext();
 
   return { loggedInUser };
 };

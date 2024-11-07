@@ -6,15 +6,15 @@ import {
   SuccessStatus,
   User,
 } from "../../../types";
-import { PostsContext } from "./PostsContext";
+import { AppStateContext } from "./AppStateContext";
 import { loadPosts } from "../../hooks/mergedPostsApi";
 import { getAllUsers } from "../../hooks/usersApi";
 
-type PostsProviderProps = {
+type AppStateProviderProps = {
   children: React.ReactNode;
 };
 
-export const PostsProvider = ({ children }: PostsProviderProps) => {
+export const AppStateProvider = ({ children }: AppStateProviderProps) => {
   const [posts, setPosts] = useState<RequestState<Post[]>>({
     status: RequestStatus.Loading,
   });
@@ -57,7 +57,7 @@ export const PostsProvider = ({ children }: PostsProviderProps) => {
   }, [loggedInUser, setUsers]);
 
   return (
-    <PostsContext.Provider
+    <AppStateContext.Provider
       value={{
         posts,
         setPosts,
@@ -70,6 +70,6 @@ export const PostsProvider = ({ children }: PostsProviderProps) => {
       }}
     >
       {children}
-    </PostsContext.Provider>
+    </AppStateContext.Provider>
   );
 };

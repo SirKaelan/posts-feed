@@ -7,6 +7,8 @@ import {
   SuccessStatus,
 } from "../../types";
 
+const url = "https://jsonplaceholder.typicode.com/posts";
+
 export const getAllPosts = async (
   limit: number
 ): Promise<SuccessStatus<Post[]> | ErrorStatus> => {
@@ -42,7 +44,7 @@ const limitPosts = (posts: Post[], limit: number): Post[] => {
 // API Functions
 export const sendNewPost = async (post: NewPost): Promise<void> => {
   try {
-    await axios.post<Post>("https://jsonplaceholder.typicode.com/posts", post);
+    await axios.post<Post>(url, post);
   } catch (err) {
     console.error(err);
   }
@@ -52,9 +54,7 @@ const fetchAllPosts = async (): Promise<
   SuccessStatus<Post[]> | ErrorStatus
 > => {
   try {
-    const { data } = await axios.get<Post[]>(
-      "https://jsonplaceholder.typicode.com/posts"
-    );
+    const { data } = await axios.get<Post[]>(url);
 
     return {
       status: RequestStatus.Success,
@@ -76,14 +76,11 @@ const fetchUserPosts = async (
   userId: number
 ): Promise<SuccessStatus<Post[]> | ErrorStatus> => {
   try {
-    const { data } = await axios.get<Post[]>(
-      "https://jsonplaceholder.typicode.com/posts",
-      {
-        params: {
-          userId,
-        },
-      }
-    );
+    const { data } = await axios.get<Post[]>(url, {
+      params: {
+        userId,
+      },
+    });
 
     return {
       status: RequestStatus.Success,

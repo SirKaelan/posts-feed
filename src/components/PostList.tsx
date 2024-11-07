@@ -1,10 +1,12 @@
 import { Post, RequestStatus } from "../types";
-import { config } from "../config";
 
 import { usePosts } from "./hooks/usePosts";
 import { useLoggedInUser } from "./hooks/useLoggedInUser";
 import { useUsers } from "./hooks/useUsers";
 import { useDeletePost } from "./hooks/useDeletePost";
+
+const cardTitleLength = 15;
+const cardBodyLength = 160;
 
 export const PostList = () => {
   const { posts } = usePosts();
@@ -39,14 +41,10 @@ export const PostList = () => {
             )}
             <h2 className="font-bold text-gray-700 text-xl">
               {post.id}:{" "}
-              {capitalizeFirstLetter(
-                truncateText(post.title, config.cardTitleLength)
-              )}
+              {capitalizeFirstLetter(truncateText(post.title, cardTitleLength))}
             </h2>
             <p className="text-sm text-gray-600">
-              {capitalizeFirstLetter(
-                truncateText(post.body, config.cardBodyLength)
-              )}
+              {capitalizeFirstLetter(truncateText(post.body, cardBodyLength))}
             </p>
             <p className="text-gray-500 text-xs text-right mt-auto">
               Written by{" "}

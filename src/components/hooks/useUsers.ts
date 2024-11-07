@@ -1,7 +1,7 @@
-import { usePostsContext } from "../contexts/posts/PostsContext";
+import { useAppStateContext } from "../contexts/app/AppStateContext";
 
 export const useUsers = () => {
-  const { users } = usePostsContext();
+  const { users } = useAppStateContext();
 
   return { users };
 };

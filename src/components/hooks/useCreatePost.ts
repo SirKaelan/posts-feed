@@ -1,10 +1,10 @@
 import { NewPost } from "../../types";
-import { usePostsContext } from "../contexts/posts/PostsContext";
+import { useAppStateContext } from "../contexts/app/AppStateContext";
 import { addLocalPost } from "./localPostsApi";
 import { sendNewPost } from "./postsApi";
 
 export const useCreatePost = () => {
-  const { setSelectedUserId, loggedInUser, reloadPosts } = usePostsContext();
+  const { setSelectedUserId, loggedInUser, reloadPosts } = useAppStateContext();
 
   const createPost = (post: NewPost): void => {
     addLocalPost(post);

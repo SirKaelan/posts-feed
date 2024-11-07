@@ -1,7 +1,7 @@
-import { usePostsContext } from "../contexts/posts/PostsContext";
+import { useAppStateContext } from "../contexts/app/AppStateContext";
 
 export const useReloadPosts = () => {
-  const { reloadPosts } = usePostsContext();
+  const { reloadPosts } = useAppStateContext();
 
   return { reloadPosts };
 };

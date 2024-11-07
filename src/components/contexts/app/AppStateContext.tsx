@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
 import { Post, RequestState, User } from "../../../types";
 
-type PostsContextType = {
+type AppStateContextType = {
   posts: RequestState<Post[]>;
   setPosts: React.Dispatch<React.SetStateAction<RequestState<Post[]>>>;
   selectedUserId: number | null;
@@ -12,13 +12,13 @@ type PostsContextType = {
   reloadPosts: (userId: number | null) => void;
 };
 
-export const PostsContext = createContext<PostsContextType | undefined>(
+export const AppStateContext = createContext<AppStateContextType | undefined>(
   undefined
 );
 
-export const usePostsContext = () => {
-  const context = useContext(PostsContext);
+export const useAppStateContext = () => {
+  const context = useContext(AppStateContext);
   if (!context)
-    throw new Error("usePostsContext must be within a PostsProvider");
+    throw new Error("useAppStateContext must be within a AppStateProvider");
   return context;
 };
