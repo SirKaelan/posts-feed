@@ -1,4 +1,6 @@
 import { PostCard } from "./PostCard";
+import { Loading } from "./Loading";
+import { Error } from "./Error";
 
 import { usePosts } from "./hooks/usePosts";
 import { useLoggedInUser } from "./hooks/useLoggedInUser";
@@ -17,8 +19,9 @@ export const PostList = () => {
     deletePost(post);
   };
 
-  if (posts.status === RequestStatus.Loading) return <p>Loading...</p>;
-  if (posts.status === RequestStatus.Error) return <p>Couldn't fetch posts!</p>;
+  if (posts.status === RequestStatus.Loading) return <Loading text="loading" />;
+  if (posts.status === RequestStatus.Error)
+    return <Error text="couldn't fetch posts!" />;
 
   return (
     <div className="flex justify-center gap-8 flex-wrap xl:gap-14">
