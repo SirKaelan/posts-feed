@@ -2,11 +2,11 @@ import { useState } from "react";
 
 import { FormInput } from "./FormInput";
 import { CloseButton } from "./CloseButton";
+import { Button } from "./Button";
 
 import { useCreatePost } from "./hooks/useCreatePost";
 import { useLoggedInUser } from "./hooks/useLoggedInUser";
 import { InputChangeEvent, NewPost } from "../types";
-import { Button } from "./Button";
 
 type PostFormProps = {
   closeForm: () => void;
@@ -74,13 +74,16 @@ export const PostForm = ({ closeForm }: PostFormProps) => {
     >
       {/* Form container */}
       <div
+        role="dialog"
         onClick={handleFormClick}
         className="bg-white py-16 px-20 rounded-lg flex flex-col gap-14 items-center relative"
       >
         <CloseButton handleClick={closeForm} />
+
         <h1 className="font-bold text-xl text-gray-800 uppercase">
           Add New Post
         </h1>
+
         <form onSubmit={handleFormSubmit} className="flex flex-col gap-5">
           <FormInput
             name="title"

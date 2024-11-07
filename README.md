@@ -13,3 +13,7 @@ PS: Not sure if you can run these commands if you have `yarn` package manager.
 ### `npm run dev`
 
 This command boots up the development server
+
+### `npm test`
+
+This command runs tests you've created. It uses `Jest` as test runner
