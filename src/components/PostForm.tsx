@@ -3,11 +3,11 @@ import { NewPost } from "../types";
 import { useCreatePost } from "./hooks/useCreatePost";
 import { useLoggedInUser } from "./hooks/useLoggedInUser";
 
-type NewPostFormProps = {
+type PostFormProps = {
   closeForm: () => void;
 };
 
-export const NewPostForm = ({ closeForm }: NewPostFormProps) => {
+export const PostForm = ({ closeForm }: PostFormProps) => {
   const { createPost } = useCreatePost();
   const { loggedInUser } = useLoggedInUser();
 

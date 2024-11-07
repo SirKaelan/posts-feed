@@ -1,13 +1,13 @@
 import { createContext, useContext } from "react";
-import { Post, RequestState, User } from "../../../types";
+import { Post, DataState, User } from "../../../types";
 
 type AppStateContextType = {
-  posts: RequestState<Post[]>;
-  setPosts: React.Dispatch<React.SetStateAction<RequestState<Post[]>>>;
+  posts: DataState<Post[]>;
+  setPosts: React.Dispatch<React.SetStateAction<DataState<Post[]>>>;
   selectedUserId: number | null;
   setSelectedUserId: React.Dispatch<React.SetStateAction<number | null>>;
-  users: RequestState<User[]>;
-  setUsers: React.Dispatch<React.SetStateAction<RequestState<User[]>>>;
+  users: DataState<User[]>;
+  setUsers: React.Dispatch<React.SetStateAction<DataState<User[]>>>;
   loggedInUser: User;
   reloadPosts: (userId: number | null) => void;
 };

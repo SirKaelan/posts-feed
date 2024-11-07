@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { NewPostForm } from "./NewPostForm";
+import { SelectUser } from "./SelectUser";
+import { PostForm } from "./PostForm";
 
-export const AddPost = () => {
+export const Header = () => {
   const [showForm, setShowForm] = useState<boolean>(false);
 
   const handleNewPostClick = () => {
@@ -13,7 +14,9 @@ export const AddPost = () => {
   };
 
   return (
-    <div>
+    <header className="flex flex-col-reverse gap-6 justify-between items-center md:flex-row">
+      <SelectUser />
+      {/* TODO: Make into a reusable button */}
       <button
         onClick={handleNewPostClick}
         className="border border-gray-400 py-1 px-2 rounded hover:bg-blue-500 hover:text-white transition"
@@ -21,7 +24,7 @@ export const AddPost = () => {
         Add New Post
       </button>
 
-      {showForm && <NewPostForm closeForm={handleFormCloseClick} />}
-    </div>
+      {showForm && <PostForm closeForm={handleFormCloseClick} />}
+    </header>
   );
 };

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   Post,
-  RequestState,
+  DataState,
   RequestStatus,
   SuccessStatus,
   User,
@@ -15,11 +15,11 @@ type AppStateProviderProps = {
 };
 
 export const AppStateProvider = ({ children }: AppStateProviderProps) => {
-  const [posts, setPosts] = useState<RequestState<Post[]>>({
+  const [posts, setPosts] = useState<DataState<Post[]>>({
     status: RequestStatus.Loading,
   });
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
-  const [users, setUsers] = useState<RequestState<User[]>>({
+  const [users, setUsers] = useState<DataState<User[]>>({
     status: RequestStatus.Loading,
   });
 

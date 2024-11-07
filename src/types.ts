@@ -5,11 +5,12 @@ export enum RequestStatus {
 }
 
 export type LoadingStatus = { status: RequestStatus.Loading };
-export type ErrorStatus = { status: RequestStatus.Error; errorMsg: string };
 export type SuccessStatus<T> = { status: RequestStatus.Success; data: T };
+export type ErrorStatus = { status: RequestStatus.Error; errorMsg: string };
 
-export type RequestState<T> = LoadingStatus | SuccessStatus<T> | ErrorStatus;
+export type DataState<T> = LoadingStatus | SuccessStatus<T> | ErrorStatus;
 
+// Data types
 export type User = {
   id: number;
   name: string;
