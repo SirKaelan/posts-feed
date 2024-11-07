@@ -6,6 +6,7 @@ import { CloseButton } from "./CloseButton";
 import { useCreatePost } from "./hooks/useCreatePost";
 import { useLoggedInUser } from "./hooks/useLoggedInUser";
 import { InputChangeEvent, NewPost } from "../types";
+import { Button } from "./Button";
 
 type PostFormProps = {
   closeForm: () => void;
@@ -98,12 +99,9 @@ export const PostForm = ({ closeForm }: PostFormProps) => {
             errMsg={formErrors.body}
           />
 
-          <button
-            type="submit"
-            className="mt-4 py-1 px-2 text-gray-800 border border-gray-500 rounded transition hover:bg-blue-500 hover:text-white"
-          >
+          <Button type="submit" className="mt-4">
             Submit
-          </button>
+          </Button>
         </form>
       </div>
     </div>
