@@ -33,3 +33,4 @@ export type NewPost = {
 
 // Event types
 export type SelectChangeEvent = React.ChangeEvent<HTMLSelectElement>;
+export type InputChangeEvent = React.ChangeEvent<HTMLInputElement>;

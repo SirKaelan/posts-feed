@@ -1,7 +1,10 @@
 import { useState } from "react";
-import { NewPost } from "../types";
+
+import { FormInput } from "./FormInput";
+
 import { useCreatePost } from "./hooks/useCreatePost";
 import { useLoggedInUser } from "./hooks/useLoggedInUser";
+import { InputChangeEvent, NewPost } from "../types";
 
 type PostFormProps = {
   closeForm: () => void;
@@ -24,7 +27,7 @@ export const PostForm = ({ closeForm }: PostFormProps) => {
     e.stopPropagation();
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: InputChangeEvent) => {
     const { name, value } = e.target;
 
     setFormValues((prevState) => ({
@@ -62,10 +65,12 @@ export const PostForm = ({ closeForm }: PostFormProps) => {
   };
 
   return (
+    // Form background
     <div
       onClick={closeForm}
       className="absolute top-0 bottom-0 left-0 right-0 bg-black bg-opacity-40 flex justify-center items-center z-10"
     >
+      {/* Form container */}
       <div
         onClick={handleFormClick}
         className="bg-white py-16 px-20 rounded-lg flex flex-col gap-14 items-center relative"
@@ -76,42 +81,26 @@ export const PostForm = ({ closeForm }: PostFormProps) => {
         >
           &#10005;
         </button>
-        <h1 className="font-bold text-xl text-gray-800">ADD NEW POST</h1>
+        <h1 className="font-bold text-xl text-gray-800 uppercase">
+          Add New Post
+        </h1>
         <form onSubmit={handleFormSubmit} className="flex flex-col gap-5">
-          <div className="flex flex-col">
-            {formErrors.title && (
-              <p className="text-red-600 mb-2 text-sm">{formErrors.title}</p>
-            )}
-            <label htmlFor="title-input" className="text-sm text-gray-800">
-              Title
-            </label>
-            <input
-              id="title-input"
-              name="title"
-              type="text"
-              value={formValues.title}
-              onChange={handleInputChange}
-              autoFocus
-              className="border border-gray-500 rounded px-4 py-2"
-            />
-          </div>
+          <FormInput
+            name="title"
+            labelContent="title"
+            value={formValues.title}
+            handleChange={handleInputChange}
+            errMsg={formErrors.title}
+            autoFocus
+          />
 
-          <div className="flex flex-col">
-            {formErrors.body && (
-              <p className="text-red-600 mb-2 text-sm">{formErrors.body}</p>
-            )}
-            <label htmlFor="body-input" className="text-sm text-gray-800">
-              Text
-            </label>
-            <input
-              id="body-input"
-              name="body"
-              type="text"
-              value={formValues.body}
-              onChange={handleInputChange}
-              className="border border-gray-500 rounded px-4 py-2"
-            />
-          </div>
+          <FormInput
+            name="body"
+            labelContent="text"
+            value={formValues.body}
+            handleChange={handleInputChange}
+            errMsg={formErrors.body}
+          />
 
           <button
             type="submit"
@@ -138,6 +127,10 @@ type FormErrors = {
 // Form field value validators
 type Validator = (value: string) => string;
 
+type ValidatorsList = {
+  [key: string]: Validator;
+};
+
 const validateTitle: Validator = (title) => {
   if (title.length === 0) return "Field cannot be empty";
   return "";
@@ -146,10 +139,6 @@ const validateTitle: Validator = (title) => {
 const validateBody: Validator = (body) => {
   if (body.length === 0) return "Field cannot be empty";
   return "";
-};
-
-type ValidatorsList = {
-  [key: string]: Validator;
 };
 
 const validators: ValidatorsList = {
